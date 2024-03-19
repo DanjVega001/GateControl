@@ -45,8 +45,8 @@ class SignupPage : AppCompatActivity() {
                 .addOnCompleteListener {
                     if (it.isSuccessful){
                         val user = User(txtNombre.text.trim().toString(), txtEmail.text.trim().toString())
-                        sendVerificationEmail(user)
-                        registerUser(user)
+                        //sendVerificationEmail(user)
+                        registerUser(user, null)
                     } else {
                         showError(it.exception?.message ?: "Error desconocido")
                     }
@@ -60,29 +60,30 @@ class SignupPage : AppCompatActivity() {
 
         userFirebase!!.sendEmailVerification()
             .addOnSuccessListener {
-                registerUser(user)
+                registerUser(user, userFirebase)
             }
             .addOnFailureListener {
                 showError(it.message ?: "Error desconocido")
             }
     }
 
-    private fun registerUser(user: User){
+    private fun registerUser(user: User, userFirebase: FirebaseUser?){
         val data = hashMapOf(
             "name" to user.getName(),
             "email" to user.getEmail(),
             "twoStepAuthEnabled" to user.isTwoStepAuthEnabled()
         )
         db.collection("users").add(data).addOnSuccessListener {
-            showHome(user.getEmail())
+            showHome(user.getEmail(), userFirebase)
         }.addOnFailureListener {
             showError(it.message.toString())
         }
     }
 
-    private fun showHome(email:String){
+    private fun showHome(email:String, userFirebase:FirebaseUser?){
         startActivity(Intent(this, HomePage::class.java).apply {
             putExtra("email", email)
+            putExtra("isEmailVerified", userFirebase?.isEmailVerified)
         })
     }
 
