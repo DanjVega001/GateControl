@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">GateControlApp</string>
+    <string name="prefs_file">com.gatecontrol.app.PREFERENCE_FILE_KEY</string>
+    <string name="default_web_cliente_id">698687547858-1uvo56i9u4lstl75nfc7ai1csae3bema.apps.googleusercontent.com</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

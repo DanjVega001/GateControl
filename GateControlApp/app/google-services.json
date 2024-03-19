@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "698687547858",
+    "project_id": "gatecontrolapp",
+    "storage_bucket": "gatecontrolapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:698687547858:android:9ce56c776490a36a43000b",
+        "android_client_info": {
+          "package_name": "com.gatecontrol.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWLgSvCFUS7eG6C5oMTtBdJHYjwz275MY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

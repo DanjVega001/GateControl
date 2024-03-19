@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.gatecontrol.app.fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_addGateFragment"
+            app:destination="@id/addGateFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addGateFragment"
+        android:name="com.gatecontrol.app.fragments.AddGateFragment"
+        android:label="fragment_add_gate"
+        tools:layout="@layout/fragment_add_gate" >
+        <action
+            android:id="@+id/action_addGateFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_addGateFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.gatecontrol.app.fragments.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_addGateFragment"
+            app:destination="@id/addGateFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_activatePhoneFragment"
+            app:destination="@id/activatePhoneFragment" />
+        <argument
+            android:name="isCancel"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/activatePhoneFragment"
+        android:name="com.gatecontrol.app.fragments.ActivatePhoneFragment"
+        android:label="fragment_activate_phone"
+        tools:layout="@layout/fragment_activate_phone" >
+        <action
+            android:id="@+id/action_activatePhoneFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_activatePhoneFragment_to_verifyCodeFragment"
+            app:destination="@id/verifyCodeFragment" />
+        <argument
+            android:name="user_id"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/verifyCodeFragment"
+        android:name="com.gatecontrol.app.fragments.VerifyCodeFragment"
+        android:label="fragment_verify_code"
+        tools:layout="@layout/fragment_verify_code" >
+        <action
+            android:id="@+id/action_verifyCodeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <argument
+            android:name="code"
+            app:argType="integer" />
+        <argument
+            android:name="user_id"
+            app:argType="string" />
+        <argument
+            android:name="phone"
+            app:argType="long" />
+    </fragment>
+</navigation>
