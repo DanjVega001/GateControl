@@ -45,8 +45,8 @@ class SignupPage : AppCompatActivity() {
                 .addOnCompleteListener {
                     if (it.isSuccessful){
                         val user = User(txtNombre.text.trim().toString(), txtEmail.text.trim().toString())
-                        //sendVerificationEmail(user)
-                        registerUser(user, null)
+                        sendVerificationEmail(user)
+                        //registerUser(user, null)
                     } else {
                         showError(it.exception?.message ?: "Error desconocido")
                     }
@@ -83,7 +83,7 @@ class SignupPage : AppCompatActivity() {
     private fun showHome(email:String, userFirebase:FirebaseUser?){
         startActivity(Intent(this, HomePage::class.java).apply {
             putExtra("email", email)
-            putExtra("isEmailVerified", userFirebase?.isEmailVerified)
+            putExtra("userFirebase", userFirebase)
         })
     }
 

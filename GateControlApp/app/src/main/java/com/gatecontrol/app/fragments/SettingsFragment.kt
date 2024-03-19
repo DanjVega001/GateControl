@@ -21,12 +21,15 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.gatecontrol.app.MainActivity
 import com.gatecontrol.app.R
 import com.gatecontrol.app.models.User
 import com.gatecontrol.app.network.AuthApiCliente
 import com.gatecontrol.app.pages.auth.LoginPage
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
@@ -53,6 +56,7 @@ class SettingsFragment : Fragment() {
         lifecycleScope.launch(Dispatchers.Main){
             val async = async {
                 loadProfileData(root)
+                deleteAccount(root)
             }
             async.await()
 
@@ -220,6 +224,52 @@ class SettingsFragment : Fragment() {
             }
         }
         dialog.show()
+    }
+
+    private fun deleteAccount(root: View){
+
+        val btnDeleteAccount:Button = root.findViewById(R.id.btnDeleteAccount)
+
+
+
+
+        btnDeleteAccount.setOnClickListener {
+            val dialog = Dialog(requireContext())
+            dialog.setContentView(R.layout.modal_confirm_delete_account)
+            dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+
+            val btnCancelarDeleteAccount:Button = dialog.findViewById(R.id.btnCancelarDeleteAccount)
+            val btnConfirmDeleteAccount:Button = dialog.findViewById(R.id.btnConfirmDeleteAccount)
+
+
+            btnCancelarDeleteAccount.setOnClickListener {
+                dialog.dismiss()
+            }
+            btnConfirmDeleteAccount.setOnClickListener {
+                try {
+                    val userFirebase: FirebaseUser =  FirebaseAuth.getInstance().currentUser!!
+                    val userFirebaseDeleted =  userFirebase.delete().addOnSuccessListener{
+                        db.collection("users").document(user.getUserId())
+                            .delete().addOnSuccessListener {
+                                context?.getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)!!
+                                    .edit().clear().apply()
+                                startActivity(Intent(requireContext(), MainActivity::class.java))
+                            }
+                            .addOnFailureListener {
+                                throw Exception(it)
+                            }
+                    }.addOnFailureListener {
+                        throw Exception(it)
+                    }
+
+                } catch (e: Exception) {
+                    Log.d("ERROR", e.message ?: "")
+                    Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+                }
+            }
+            dialog.show()
+        }
+
     }
 
     private fun setupNav(root:View){

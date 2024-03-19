@@ -1,14 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout3"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.InauthenticatedFragment">
+    android:background="@color/blue_primary"
+    android:layout_height="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
 
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="match_parent"
+            android:layout_height="168dp"
+
+            app:srcCompat="@drawable/img_inautehnticated_page" />
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="257dp"
+            android:layout_height="143dp"
+            android:fontFamily="@font/roboto_medium"
+            android:gravity="center"
+            android:text="Attention! to continue using our app you must validate your account in the email we send to your registered email address. Don't worry, we are waiting for you"
+            android:textColor="@color/white"
+            android:textSize="16dp" />
+
+        <Button
+            android:fontFamily="@font/roboto_medium"
+            android:textAllCaps="false"
+            android:id="@+id/btnReload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:backgroundTint="@color/blue_secondary"
+            android:textColor="@color/white"
+            android:text="Already validated" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

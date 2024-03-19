@@ -27,7 +27,6 @@ class VerifyCodeFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_verify_code, container, false)
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sendCode(view)
