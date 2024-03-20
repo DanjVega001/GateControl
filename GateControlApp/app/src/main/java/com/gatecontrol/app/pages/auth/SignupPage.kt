@@ -57,7 +57,6 @@ class SignupPage : AppCompatActivity() {
 
     private fun sendVerificationEmail(user: User){
         val userFirebase:FirebaseUser? =  FirebaseAuth.getInstance().currentUser
-
         userFirebase!!.sendEmailVerification()
             .addOnSuccessListener {
                 registerUser(user, userFirebase)
