@@ -63,7 +63,7 @@ class ActivatePhoneFragment : Fragment() {
 
             lifecycleScope.launch(Dispatchers.IO){
                 val deferred =
-                    async { service.sendNumberPhone(txtPhoneNumber.text.toString()) }
+                    async { service.sendNumberPhone(txtPhoneNumber.text.toString(), false) }
 
                 val response = deferred.await()
 

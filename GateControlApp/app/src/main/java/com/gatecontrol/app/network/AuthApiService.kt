@@ -9,5 +9,6 @@ interface AuthApiService{
 
     @FormUrlEncoded
     @POST("send-number-phone")
-    suspend fun sendNumberPhone(@Field("phone") phone:String) : Response<Map<String, Any>>
+    suspend fun sendNumberPhone(@Field("phone") phone:String, @Field("isLogin") isLogin:Boolean)
+        : Response<Map<String, Any>>
 }

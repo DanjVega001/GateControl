@@ -11,11 +11,16 @@ app.post('/send-number-phone', (req, res) => {
         var max = 9999;
 
         var code = Math.floor(Math.random()*(max-min+1)+min)
-
-        var message = "Hemos recibido la solicitud de activar la autenticacion por dos pasos. ";
-        message+="Digita el siguiente codigo para validar esta activación "+code;   
-        
         const data = req.body;
+
+        var message = "";
+        if (data.isLogin) {
+            message = "Hemos recibido una solicitud de inicio de sesión en tu cuenta registrado a este número. ";
+        }else{
+            message = "Hemos recibido la solicitud de activar la autenticacion por dos pasos. ";
+        }
+        message+="Digita el siguiente codigo para validar esta solicitud "+code;   
+        
         client.messages.create({
             body: message,
             from: '+14434867639',

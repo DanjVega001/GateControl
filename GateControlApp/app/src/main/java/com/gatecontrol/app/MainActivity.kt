@@ -13,7 +13,6 @@ import com.gatecontrol.app.pages.auth.SignupPage
 import com.google.android.gms.auth.api.identity.SignInClient
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var oneTapClient: SignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
