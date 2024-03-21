@@ -8,45 +8,173 @@
     android:background="@color/blue_primary"
     tools:context=".fragments.AddGateFragment">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/blue_primary"
-        tools:context=".fragments.AddGateFragment">
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingTop="20dp"
+        android:paddingRight="20dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Pagina para agregar un porton"
-            android:textColor="@color/white" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="20dp"
+            android:fontFamily="@font/roboto_medium"
+            android:letterSpacing=".05"
+            android:text="Register your gate"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="normal" />
 
-    </FrameLayout>
+        <EditText
+            android:id="@+id/txtNameGate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/edit_text_background"
+            android:ems="10"
+            android:fontFamily="@font/roboto_medium"
+            android:hint="Name or identifier unique"
+            android:inputType="text"
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:textColor="@color/white"
+            android:textColorHint="#7EFFFFFF" />
+
+        <EditText
+            android:id="@+id/txtWifiName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/edit_text_background"
+            android:ems="10"
+            android:fontFamily="@font/roboto_medium"
+            android:hint="Wifi name"
+            android:inputType="text"
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:textColor="@color/white"
+            android:textColorHint="#7EFFFFFF" />
+
+
+        <EditText
+            android:id="@+id/txtWifiPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/edit_text_background"
+            android:ems="10"
+            android:fontFamily="@font/roboto_medium"
+            android:hint="Wifi Password"
+            android:inputType="textPassword"
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:textColor="@color/white"
+            android:textColorHint="#7EFFFFFF" />
+
+        <EditText
+            android:id="@+id/txtVoltage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/edit_text_background"
+            android:ems="10"
+            android:fontFamily="@font/roboto_medium"
+            android:hint="Voltage"
+            android:inputType="number"
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:textColor="@color/white"
+            android:textColorHint="#7EFFFFFF" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="20dp">
+
+            <ImageView
+                android:id="@+id/icCheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/ic_check"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/roboto_medium"
+                android:text="Select an image of the gate"
+                android:textColor="@color/white"
+                android:textSize="18dp" />
+
+            <ImageButton
+                android:id="@+id/btnGoModalSelectImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/baseline_arrow_forward_24"
+                android:backgroundTint="@color/white"
+                android:letterSpacing="0.04"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnCreateNewGate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_auth_login_background"
+                android:fontFamily="@font/roboto_medium"
+                android:text="Save gate"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:layout_marginBottom="50dp"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+    </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        app:itemIconSize="25dp"
+        android:background="@color/blue_last"
         android:paddingBottom="10dp"
+        app:itemIconSize="25dp"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:itemTextColor="@color/white"
-        app:itemIconTint="@color/white"
-        android:background="@color/blue_last"
         app:menu="@menu/bottom_nav_menu">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnAddGate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:contentDescription="@string/app_name"
-        android:paddingTop="20dp"
-        android:src="@drawable/ic_add"
-        app:backgroundTint="@color/blue_secondary" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnAddGate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/app_name"
+            android:paddingTop="20dp"
+            android:src="@drawable/ic_add"
+            app:backgroundTint="@color/blue_secondary" />
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 

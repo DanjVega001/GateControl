@@ -63,6 +63,10 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("androidx.activity:activity-ktx:1.8.2")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+    implementation("androidx.activity:activity-ktx:1.8.2")
+    implementation("com.google.firebase:firebase-storage")
+
+
 
     //implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
 
