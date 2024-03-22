@@ -2,19 +2,13 @@ package com.gatecontrol.app.models
 
 import android.net.Uri
 
-class Gate(private var name:String, private var wifiName: String, private var wifiPassword:String,
-    private var voltage:Int, private var urlImage:Uri){
+data class Gate( var name:String,  var wifiName: String?,  var wifiPassword:String?,
+     var voltage:Int?,  var urlImage:Uri, var state:String = "close"){
 
-    fun getName():String = this.name
 
-    fun getWifiName():String = this.wifiName
-
-    fun getVoltage():Int = this.voltage
-
-    fun getUrlImage():Uri = this.urlImage
 
     fun validateGate():String?{
-        if (this.name.trim().isEmpty() || this.wifiName.trim().isEmpty() || this.voltage<0){
+        if (this.name.trim().isEmpty() || this.wifiName!!.trim().isEmpty() || this.voltage!!<0){
             return "Fields cannot be empty"
         }
         return null

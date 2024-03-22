@@ -65,6 +65,9 @@ dependencies {
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
     implementation("androidx.activity:activity-ktx:1.8.2")
     implementation("com.google.firebase:firebase-storage")
+    implementation("com.squareup.picasso:picasso:2.71828")
+
+
 
 
 

@@ -68,12 +68,12 @@ class SignupPage : AppCompatActivity() {
 
     private fun registerUser(user: User, userFirebase: FirebaseUser?){
         val data = hashMapOf(
-            "name" to user.getName(),
-            "email" to user.getEmail(),
-            "twoStepAuthEnabled" to user.isTwoStepAuthEnabled()
+            "name" to user.name,
+            "email" to user.email,
+            "twoStepAuthEnabled" to user.twoStepAuthEnabled
         )
         db.collection("users").add(data).addOnSuccessListener {
-            showHome(user.getEmail(), userFirebase)
+            showHome(user.email, userFirebase)
         }.addOnFailureListener {
             showError(it.message.toString())
         }

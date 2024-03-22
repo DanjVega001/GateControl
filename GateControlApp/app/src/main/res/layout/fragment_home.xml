@@ -13,13 +13,61 @@
         android:layout_height="match_parent"
         android:background="@color/blue_primary">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Pagina de inicio"
-            android:textColor="@color/white" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="10dp"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="@font/roboto_medium"
+                android:letterSpacing=".05"
+                android:text="My Gates"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="normal" />
+
+            <LinearLayout
+                android:id="@+id/layoutNoGates"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="146dp"
+                    android:layout_height="147dp"
+                    app:srcCompat="@drawable/img_space_svg" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:paddingTop="20dp"
+                    android:text="No gates created"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="normal" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvGates"
+                android:layout_width="387dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="80dp"
+                android:visibility="visible" />
+        </LinearLayout>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationView"

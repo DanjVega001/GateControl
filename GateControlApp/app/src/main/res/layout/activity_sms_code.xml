@@ -32,7 +32,7 @@
             android:layout_width="249dp"
             android:layout_height="308dp"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/img_send_code_aut" />
+            android:src="@drawable/img_send_code_auth" />
 
         <TextView
             android:id="@+id/textView12"

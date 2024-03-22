@@ -78,13 +78,13 @@ class SettingsFragment : Fragment() {
         try {
             val userRef = db.collection("users").whereEqualTo("email", email).get().await()
             for (doc in userRef) {
-                user.setName(doc.data["name"] as String)
-                user.setEmail(doc.data["email"] as String)
-                user.setTwoStepAuthEnabled(doc.data["twoStepAuthEnabled"] as Boolean)
-                user.setUserId(doc.id)
+                user.name  = doc.data["name"] as String
+                user.email = doc.data["email"] as String
+                user.twoStepAuthEnabled = doc.data["twoStepAuthEnabled"] as Boolean
+                user.userId = doc.id
             }
             val txtName: EditText = root.findViewById(R.id.txtNameEdit)
-            txtName.setText(user.getName())
+            txtName.setText(user.name)
         } catch (e: Exception) {
             Log.d("ERROR", e.message ?: "")
             Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
@@ -103,7 +103,7 @@ class SettingsFragment : Fragment() {
             if (txtName.text.trim().isEmpty()){
                 Toast.makeText(context, "Name cannot be empty", Toast.LENGTH_LONG).show()
             } else {
-                db.collection("users").document(user.getUserId())
+                db.collection("users").document(user.userId)
                     .update("name", txtName.text.toString())
                     .addOnSuccessListener {
                         findNavController().navigate(R.id.action_settingsFragment_to_homeFragment)
@@ -123,6 +123,7 @@ class SettingsFragment : Fragment() {
         btnLogout.setOnClickListener {
             context?.getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)!!
                 .edit().clear().apply()
+            requireActivity().finish()
             startActivity(Intent(context, LoginPage::class.java))
         }
     }
@@ -174,7 +175,7 @@ class SettingsFragment : Fragment() {
         val swTwoFactorAuth:SwitchCompat = root.findViewById(R.id.swTwoFactorAuth)
         val argsFragment:SettingsFragmentArgs by navArgs()
 
-        if (argsFragment.isCancel || !user.isTwoStepAuthEnabled()){
+        if (argsFragment.isCancel || !user.twoStepAuthEnabled){
             swTwoFactorAuth.isChecked = false
         } else {
             swTwoFactorAuth.isChecked = true
@@ -184,7 +185,7 @@ class SettingsFragment : Fragment() {
 
             if (swTwoFactorAuth.isChecked){
                 findNavController().navigate(SettingsFragmentDirections.actionSettingsFragmentToActivatePhoneFragment(
-                    userId = user.getUserId()
+                    userId = user.userId
                 ))
             } else {
                 disableTwoStepAuth(root)
@@ -210,7 +211,7 @@ class SettingsFragment : Fragment() {
             )
 
             try {
-                val user = db.collection("users").document(user.getUserId())
+                val user = db.collection("users").document(user.userId)
                 val result = user.update(newData)
                 if (!result.isSuccessful) {
                     Log.d("ERROR", result.exception?.message ?: "")
@@ -249,7 +250,7 @@ class SettingsFragment : Fragment() {
                 try {
                     val userFirebase: FirebaseUser =  FirebaseAuth.getInstance().currentUser!!
                     val userFirebaseDeleted =  userFirebase.delete().addOnSuccessListener{
-                        db.collection("users").document(user.getUserId())
+                        db.collection("users").document(user.userId)
                             .delete().addOnSuccessListener {
                                 context?.getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)!!
                                     .edit().clear().apply()

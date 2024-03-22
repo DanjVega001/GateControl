@@ -1,27 +1,42 @@
 package com.gatecontrol.app.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
+import android.text.Layout
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.gatecontrol.app.R
+import com.gatecontrol.app.adapters.GateAdapter
+import com.gatecontrol.app.models.Gate
 import com.gatecontrol.app.models.User
 import com.gatecontrol.app.network.AuthApiCliente
+import com.gatecontrol.app.pages.auth.LoginPage
 import com.google.android.gms.auth.api.Auth
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import retrofit2.Call
 import javax.security.auth.callback.Callback
 
 class HomeFragment : Fragment() {
 
-
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,8 +45,68 @@ class HomeFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
 
         setupNav(root)
-
+        initRecycler(root)
         return root
+    }
+
+    private fun initRecycler(view: View) {
+        val recyclerView:RecyclerView = view.findViewById(R.id.rvGates)
+        val layoutNoGates = view.findViewById<LinearLayout>(R.id.layoutNoGates)
+        lifecycleScope.launch(Dispatchers.Main) {
+            val async = async { getGates() }
+            val gateList: List<Gate> = async.await()
+            if (gateList.isEmpty()){
+                layoutNoGates.visibility = View.VISIBLE
+                recyclerView.visibility = View.GONE
+            } else {
+                layoutNoGates.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
+                recyclerView.layoutManager = LinearLayoutManager(context)
+                recyclerView.adapter = GateAdapter(gateList)
+            }
+        }
+    }
+
+    private suspend fun getGates(): List<Gate> {
+        val email: String? = context?.getSharedPreferences(
+            getString(R.string.prefs_file), Context.MODE_PRIVATE
+        )?.getString("email", "")
+
+        email ?: {
+            Toast.makeText(context, "Your session has expired, please log in again.", Toast.LENGTH_LONG).show()
+            startActivity(Intent(requireContext(), LoginPage::class.java))
+        }
+
+        val gates:MutableList<Gate> = mutableListOf()
+        var userId = ""
+
+        try {
+            val userRef = db.collection("users").whereEqualTo("email", email).get().await()
+            for (doc in userRef) {
+                userId = doc.id
+            }
+            val gatesRef = db.collection("users").document(userId).collection("gates")
+                .get().await()
+
+            var i = 0
+            gatesRef.forEach { doc ->
+                val gate = Gate(
+                    name = doc["name"].toString(),
+                    urlImage = Uri.parse(doc["urlImage"].toString()),
+                    wifiPassword = "",
+                    wifiName = "",
+                    voltage = 0
+                )
+                Log.d("gate", gate.toString())
+                gates.add(i, gate)
+                i+=1
+            }
+
+        } catch (e: Exception) {
+            Log.d("ERROR", e.message ?: "")
+            Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+        }
+        return gates.toList()
     }
 
 

@@ -99,9 +99,15 @@ class AddGateFragment : Fragment() {
             uploadTask.addOnFailureListener {
                 Toast.makeText(context, "Error: ${it.message}", Toast.LENGTH_LONG).show()
             }.addOnSuccessListener {
-                lifecycleScope.launch(Dispatchers.Main) {
-                    saveGateToFirestore(gate)
+                riversRef.downloadUrl.addOnSuccessListener {
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        gate.urlImage = it
+                        saveGateToFirestore(gate)
+                    }
+                }.addOnFailureListener {
+                    Toast.makeText(context, "Error: ${it.message}", Toast.LENGTH_LONG).show()
                 }
+
             }
     }
 
