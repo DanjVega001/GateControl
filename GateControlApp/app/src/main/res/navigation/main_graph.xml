@@ -28,6 +28,10 @@
         <action
             android:id="@+id/action_addGateFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <argument
+            android:name="gate_id"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"

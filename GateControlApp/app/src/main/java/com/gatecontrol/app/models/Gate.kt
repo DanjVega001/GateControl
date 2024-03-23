@@ -5,7 +5,7 @@ import android.net.Uri
 data class Gate( var name:String,  var wifiName: String?,  var wifiPassword:String?,
      var voltage:Int?,  var urlImage:Uri, var state:String = "close"){
 
-
+    var gateId:String = ""
 
     fun validateGate():String?{
         if (this.name.trim().isEmpty() || this.wifiName!!.trim().isEmpty() || this.voltage!!<0){

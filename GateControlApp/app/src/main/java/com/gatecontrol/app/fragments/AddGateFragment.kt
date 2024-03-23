@@ -1,10 +1,12 @@
 package com.gatecontrol.app.fragments
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.net.Uri
 import android.opengl.Visibility
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,11 +16,13 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.*
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.gatecontrol.app.R
 import com.gatecontrol.app.models.Gate
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -26,16 +30,21 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 
 class AddGateFragment : Fragment() {
 
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val storageRef:StorageReference = FirebaseStorage.getInstance().reference.child("images")
     private lateinit var imgSelected:ImageView
     private var urlImage:Uri?=null
+    private val args:AddGateFragmentArgs by navArgs()
+    private var userID:String = ""
 
     private val pickMedia = registerForActivityResult(PickVisualMedia()){ uri ->
         if (uri!=null){
@@ -55,7 +64,57 @@ class AddGateFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        goModalSelectImage(view)
+        lifecycleScope.launch(Dispatchers.Main) {
+            val async = async {
+                getUserID()
+            }
+            async.await()
+            goModalSelectImage(view)
+            if (args.gateId == null) {
+                saveGate(view)
+            } else {
+                val txtTitleGate:TextView = view.findViewById(R.id.txtTitleGate)
+                txtTitleGate.text = "Edit your gate"
+                editGate(view)
+            }
+        }
+
+    }
+    private suspend fun getUserID(){
+        try {
+            val email: String? = context?.getSharedPreferences(
+                getString(R.string.prefs_file), Context.MODE_PRIVATE
+            )?.getString("email", "")
+
+            email ?: return
+
+            val userRef = db.collection("users").whereEqualTo("email", email).get().await()
+            for (doc in userRef) {
+                userID = doc.id
+            }
+        } catch (e:Exception){
+            Log.d("ERROR", e.toString() ?: "")
+            Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+        }
+
+    }
+
+    private fun editGate(view: View) {
+         db.collection("users").document(userID).collection("gates")
+            .document(args.gateId!!).get().addOnSuccessListener {
+                 val txtNameGate:EditText = view.findViewById(R.id.txtNameGate)
+                 val txtWifiName:EditText = view.findViewById(R.id.txtWifiName)
+                 val txtWifiPassword:EditText = view.findViewById(R.id.txtWifiPassword)
+                 val txtVoltage:EditText = view.findViewById(R.id.txtVoltage)
+                 txtNameGate.text = SpannableStringBuilder(it.data!!["name"].toString())
+                 txtWifiName.text = SpannableStringBuilder(it.data!!["wifiName"].toString())
+                 txtWifiPassword.text = SpannableStringBuilder(it.data!!["wifiPassword"].toString())
+                 txtVoltage.text = SpannableStringBuilder(it.data!!["voltage"].toString())
+                 urlImage = Uri.parse(it.data!!["urlImage"].toString())
+            }.addOnFailureListener {
+                 Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                 return@addOnFailureListener
+             }
         saveGate(view)
     }
 
@@ -111,29 +170,34 @@ class AddGateFragment : Fragment() {
             }
     }
 
-    private suspend fun saveGateToFirestore(gate: Gate){
-        val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-
-        val email: String? = context?.getSharedPreferences(
-            getString(R.string.prefs_file), Context.MODE_PRIVATE
-        )?.getString("email", "")
-
-        email ?: return
+    private fun saveGateToFirestore(gate: Gate){
 
         try {
-            var userId = ""
-            val userRef = db.collection("users").whereEqualTo("email", email).get().await()
-            for (doc in userRef) {
-                userId = doc.id
+            if (args.gateId==null){
+                db.collection("users").document(userID).collection("gates")
+                    .add(gate).addOnSuccessListener {
+                        Toast.makeText(context, "Gate created", Toast.LENGTH_LONG).show()
+                        findNavController().navigate(AddGateFragmentDirections.actionAddGateFragmentToHomeFragment())
+                    }.addOnFailureListener {
+                        throw Exception(it)
+                    }
+            } else {
+                val data = HashMap<String, Any>()
+                data["name"] = gate.name
+                data["wifiName"] = gate.wifiName!!
+                data["wifiPassword"] = gate.wifiPassword!!
+                data["voltage"] = gate.voltage!!
+                data["urlImage"] = gate.urlImage.toString()
+
+                db.collection("users").document(userID).collection("gates")
+                    .document(args.gateId!!).update(data).addOnSuccessListener {
+                        Toast.makeText(context, "Gate Updated", Toast.LENGTH_LONG).show()
+                        findNavController().navigate(AddGateFragmentDirections.actionAddGateFragmentToHomeFragment())
+                    }.addOnFailureListener {
+                        throw Exception(it)
+                    }
             }
 
-            db.collection("users").document(userId).collection("gates")
-                .add(gate).addOnSuccessListener {
-                    Toast.makeText(context, "Gate created", Toast.LENGTH_LONG).show()
-                    findNavController().navigate(AddGateFragmentDirections.actionAddGateFragmentToHomeFragment())
-                }.addOnFailureListener {
-                    throw Exception(it)
-                }
         } catch (e: Exception) {
             Log.d("ERROR", e.toString() ?: "")
             Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
@@ -149,7 +213,7 @@ class AddGateFragment : Fragment() {
             val btnSaveGateImage:Button = dialog.findViewById(R.id.btnSaveGateImage)
             imgSelected = dialog.findViewById(R.id.selectedGateImage)
             if (urlImage!=null){
-                imgSelected.setImageURI(urlImage)
+                Picasso.get().load(urlImage).into(imgSelected)
             }
             btnSaveGateImage.setOnClickListener {
                 if (urlImage!=null){

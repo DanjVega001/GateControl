@@ -3,7 +3,12 @@ const express = require('express');
 const app = express();
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
+const { getFirestore, Timestamp, FieldValue, Filter } = require('firebase-admin/firestore');
 const client = require('twilio')(accountSid, authToken);
+const axios = require('axios');
+const URL_ARDUINO = "http://192.168.1.100/";
+
+const db = getFirestore();
 
 app.post('/send-number-phone', (req, res) => {
     try {
@@ -35,6 +40,91 @@ app.post('/send-number-phone', (req, res) => {
         console.log(error);
     }
 });
+
+app.post('/open-gate', async (req, res) => {
+
+    try {
+        const user_id = req.body.user_id;
+        const gate_id = req.body.gate_id;
+
+        const userRef = db.collection('users').doc(user_id);
+        const gateRef = userRef.collection('gates').doc(gate_id);
+
+        const gate = await gateRef.get();
+
+        if (!gate.exists) {
+            throw new Error("Gate not found")
+        } 
+
+        const response = await axios.post(URL_ARDUINO+"abrir-porton", gate.data());
+
+        if (response.status==200) {
+
+            await gateRef.update({
+                "state" : "open"
+            }).then((_) => {
+                res.status(200).json({
+                    "message" : "Open gate!"
+                })
+            }).catch((error) => {
+                throw new Error(error.message);
+            });
+
+        } else {
+            throw new Error(response.statusText);
+        }
+
+    } catch (error) {
+        return res.status(400).json({
+            "error" : error
+        })
+    }
+
+});
+
+
+app.post('/close-gate', async (req, res) => {
+
+    try {
+        const user_id = req.body.user_id;
+        const gate_id = req.body.gate_id;
+
+        const userRef = db.collection('users').doc(user_id);
+        const gateRef = userRef.collection('gates').doc(gate_id);
+
+        const gate = await gateRef.get();
+
+        if (!gate.exists) {
+            throw new Error("Gate not found")
+        } 
+
+        const response = await axios.post(URL_ARDUINO+"cerrar-porton", data);
+
+        if (response.status==200) {
+
+            await gateRef.update({
+                "state" : "close"
+            }).then((_) => {
+                res.status(200).json({
+                    "message" : "Open gate!"
+                })
+            }).catch((error) => {
+                throw new Error(error.message);
+            });
+
+        } else {
+            throw new Error(response.statusText);
+        }
+
+    } catch (error) {
+        return res.status(400).json({
+            "error" : error
+        })
+    }
+
+});
+
+
 
 
 

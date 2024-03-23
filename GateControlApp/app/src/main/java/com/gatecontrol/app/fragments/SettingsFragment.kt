@@ -282,7 +282,9 @@ class SettingsFragment : Fragment() {
                     return@setOnItemSelectedListener true
                 }
                 R.id.placeholder -> {
-                    findNavController().navigate(R.id.action_settingsFragment_to_addGateFragment)
+                    findNavController().navigate(SettingsFragmentDirections.actionSettingsFragmentToAddGateFragment(
+                        gateId = null
+                    ))
                     return@setOnItemSelectedListener true
                 }
                 R.id.itemSettings -> {

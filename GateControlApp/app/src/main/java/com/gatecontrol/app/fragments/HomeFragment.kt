@@ -97,7 +97,7 @@ class HomeFragment : Fragment() {
                     wifiName = "",
                     voltage = 0
                 )
-                Log.d("gate", gate.toString())
+                gate.gateId = doc.id
                 gates.add(i, gate)
                 i+=1
             }
@@ -118,7 +118,9 @@ class HomeFragment : Fragment() {
                     return@setOnItemSelectedListener true
                 }
                 R.id.placeholder -> {
-                    findNavController().navigate(R.id.action_homeFragment_to_addGateFragment)
+                    findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToAddGateFragment(
+                        gateId = null
+                    ))
                     return@setOnItemSelectedListener true
                 }
                 R.id.itemSettings -> {
