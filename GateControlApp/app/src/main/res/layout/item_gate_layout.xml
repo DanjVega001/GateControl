@@ -80,7 +80,7 @@
                 android:id="@+id/btnOpenGate"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/btn_auth_login_background"
+                android:background="@drawable/btn_active_gate"
                 android:fontFamily="@font/roboto_medium"
                 android:text="Open"
                 android:textAllCaps="false"
@@ -96,7 +96,7 @@
                 android:id="@+id/btnCloseGate"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/btn_auth_background"
+                android:background="@drawable/btn_inactive_gate"
                 android:fontFamily="@font/roboto_medium"
                 android:text="Close"
                 android:textAllCaps="false"
@@ -145,7 +145,9 @@
                     android:text="State"
                     android:textColor="@color/white"
                     android:textSize="16dp" />
+
             </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

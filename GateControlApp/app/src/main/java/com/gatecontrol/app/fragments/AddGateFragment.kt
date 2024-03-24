@@ -12,14 +12,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts.*
+import androidx.core.view.marginLeft
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -64,6 +67,9 @@ class AddGateFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val btnDeleteGate = view.findViewById<Button>(R.id.btnDeleteGate)
+
         lifecycleScope.launch(Dispatchers.Main) {
             val async = async {
                 getUserID()
@@ -71,8 +77,13 @@ class AddGateFragment : Fragment() {
             async.await()
             goModalSelectImage(view)
             if (args.gateId == null) {
+                btnDeleteGate.visibility = View.GONE
                 saveGate(view)
             } else {
+                btnDeleteGate.visibility = View.VISIBLE
+                btnDeleteGate.setOnClickListener {
+                    deleteGate(args.gateId as String)
+                }
                 val txtTitleGate:TextView = view.findViewById(R.id.txtTitleGate)
                 txtTitleGate.text = "Edit your gate"
                 editGate(view)
@@ -80,6 +91,18 @@ class AddGateFragment : Fragment() {
         }
 
     }
+
+    private fun deleteGate(gateId: String) {
+        db.collection("users").document(userID).collection("gates")
+            .document(gateId).delete().addOnSuccessListener {
+                findNavController().navigate(AddGateFragmentDirections.actionAddGateFragmentToHomeFragment())
+                return@addOnSuccessListener
+            }.addOnFailureListener {
+                Log.d("ERROR", it.toString())
+                Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+            }
+    }
+
     private suspend fun getUserID(){
         try {
             val email: String? = context?.getSharedPreferences(

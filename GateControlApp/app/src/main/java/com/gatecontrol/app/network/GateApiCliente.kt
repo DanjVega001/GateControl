@@ -4,7 +4,7 @@ import com.gatecontrol.app.util.Constants
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object AuthApiCliente {
+object GateApiCliente {
     private const val BASE_URL = Constants.URL_CLOUD_FUNCTIONS
 
     private val retrofit = Retrofit.Builder()
@@ -12,9 +12,9 @@ object AuthApiCliente {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    fun getInstance() : AuthApiService {
-        return retrofit.create(AuthApiService::class.java)
+    fun getInstance():GateApiService{
+        return retrofit.create(GateApiService::class.java)
     }
-
 }
+
 

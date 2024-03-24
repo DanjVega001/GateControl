@@ -56,6 +56,22 @@ app.post('/open-gate', async (req, res) => {
             throw new Error("Gate not found")
         } 
 
+        setTimeout(() => {
+            console.log('Pasaron 3 segundos');
+        }, 6000); 
+
+        await gateRef.update({
+            "state" : "open"
+        }).then((_) => {
+            res.status(200).json({
+                "message" : "Open gate!"
+            })
+        }).catch((error) => {
+            throw new Error(error.message);
+        });
+
+
+        /*
         const response = await axios.post(URL_ARDUINO+"abrir-porton", gate.data());
 
         if (response.status==200) {
@@ -73,7 +89,7 @@ app.post('/open-gate', async (req, res) => {
         } else {
             throw new Error(response.statusText);
         }
-
+        */
     } catch (error) {
         return res.status(400).json({
             "error" : error
@@ -98,6 +114,21 @@ app.post('/close-gate', async (req, res) => {
             throw new Error("Gate not found")
         } 
 
+        setTimeout(() => {
+            console.log('Pasaron 3 segundos');
+        }, 6000); 
+
+        await gateRef.update({
+            "state" : "close"
+        }).then((_) => {
+            res.status(200).json({
+                "message" : "Close gate!"
+            })
+        }).catch((error) => {
+            throw new Error(error.message);
+        });
+
+        /*
         const response = await axios.post(URL_ARDUINO+"cerrar-porton", data);
 
         if (response.status==200) {
@@ -114,7 +145,7 @@ app.post('/close-gate', async (req, res) => {
 
         } else {
             throw new Error(response.statusText);
-        }
+        }*/
 
     } catch (error) {
         return res.status(400).json({

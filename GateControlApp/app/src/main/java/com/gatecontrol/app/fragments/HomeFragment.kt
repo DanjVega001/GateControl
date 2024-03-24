@@ -37,6 +37,7 @@ import javax.security.auth.callback.Callback
 class HomeFragment : Fragment() {
 
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private var userId = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,7 +63,7 @@ class HomeFragment : Fragment() {
                 layoutNoGates.visibility = View.GONE
                 recyclerView.visibility = View.VISIBLE
                 recyclerView.layoutManager = LinearLayoutManager(context)
-                recyclerView.adapter = GateAdapter(gateList)
+                recyclerView.adapter = GateAdapter(gateList, userId)
             }
         }
     }
@@ -78,7 +79,6 @@ class HomeFragment : Fragment() {
         }
 
         val gates:MutableList<Gate> = mutableListOf()
-        var userId = ""
 
         try {
             val userRef = db.collection("users").whereEqualTo("email", email).get().await()
@@ -93,6 +93,7 @@ class HomeFragment : Fragment() {
                 val gate = Gate(
                     name = doc["name"].toString(),
                     urlImage = Uri.parse(doc["urlImage"].toString()),
+                    state = doc["state"].toString(),
                     wifiPassword = "",
                     wifiName = "",
                     voltage = 0

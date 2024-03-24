@@ -130,24 +130,41 @@
                 android:letterSpacing="0.04"
                 android:textAllCaps="false"
                 android:textColor="@color/white" />
+
         </LinearLayout>
+
         <LinearLayout
+            android:id="@+id/layout_buttons_gate"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:gravity="bottom"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:paddingTop="50dp">
 
             <Button
                 android:id="@+id/btnCreateNewGate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
                 android:background="@drawable/btn_auth_login_background"
                 android:fontFamily="@font/roboto_medium"
                 android:text="Save gate"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:layout_marginBottom="50dp"
                 android:textSize="16sp" />
+
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btnDeleteGate"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_delete_account"
+                android:text="Delete gate"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
+
         </LinearLayout>
 
     </LinearLayout>
