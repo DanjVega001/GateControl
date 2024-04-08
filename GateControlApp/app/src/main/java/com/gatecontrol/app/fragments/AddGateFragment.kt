@@ -129,6 +129,7 @@ class AddGateFragment : Fragment() {
                  val txtWifiName:EditText = view.findViewById(R.id.txtWifiName)
                  val txtWifiPassword:EditText = view.findViewById(R.id.txtWifiPassword)
                  val txtVoltage:EditText = view.findViewById(R.id.txtVoltage)
+                 Log.d("data", it.data.toString())
                  txtNameGate.text = SpannableStringBuilder(it.data!!["name"].toString())
                  txtWifiName.text = SpannableStringBuilder(it.data!!["wifiName"].toString())
                  txtWifiPassword.text = SpannableStringBuilder(it.data!!["wifiPassword"].toString())

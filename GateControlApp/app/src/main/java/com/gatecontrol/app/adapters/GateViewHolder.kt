@@ -38,12 +38,7 @@ class GateViewHolder(private val view: View) : ViewHolder(view) {
     private val backActiveGate = ContextCompat.getDrawable(view.context, R.drawable.btn_active_gate)
     private val backInactiveGate = ContextCompat.getDrawable(view.context, R.drawable.btn_inactive_gate)
 
-    init {
-        btnEditGate.setOnClickListener {
-            val gateId = getItemId().toString()
-            goEditGate(gateId)
-        }
-    }
+
 
     fun render(gate: Gate, userID: String) {
         nameGate.text = gate.name
@@ -84,6 +79,10 @@ class GateViewHolder(private val view: View) : ViewHolder(view) {
                 btnOpenGate.background = backInactiveGate
                 txtState.text = "close"
             }
+        }
+
+        btnEditGate.setOnClickListener {
+            goEditGate(gateID)
         }
     }
 
