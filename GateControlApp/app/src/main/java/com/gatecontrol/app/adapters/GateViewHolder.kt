@@ -54,6 +54,8 @@ class GateViewHolder(private val view: View) : ViewHolder(view) {
         manageGate(gate.gateId, userID)
     }
 
+
+
     private fun manageGate(gateID: String, userID: String) {
         val txtState:TextView = view.findViewById(R.id.txtCurrentState)
 

@@ -30,9 +30,12 @@ import com.gatecontrol.app.R
 import com.gatecontrol.app.models.Gate
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageException
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
+import com.google.firebase.storage.ktx.storage
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -48,6 +51,7 @@ class AddGateFragment : Fragment() {
     private var urlImage:Uri?=null
     private val args:AddGateFragmentArgs by navArgs()
     private var userID:String = ""
+    private var cambiarImagen = false
 
     private val pickMedia = registerForActivityResult(PickVisualMedia()){ uri ->
         if (uri!=null){
@@ -166,7 +170,11 @@ class AddGateFragment : Fragment() {
                     Toast.makeText(context, gate.validateGate(), Toast.LENGTH_LONG).show()
                     return@setOnClickListener
                 }
-                saveImageToFirebase(gate)
+                if (cambiarImagen){
+                    saveImageToFirebase(gate)
+                } else {
+                    saveGateToFirestore(gate)
+                }
             } else {
                 Toast.makeText(context, "You must choose an image", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
@@ -176,11 +184,19 @@ class AddGateFragment : Fragment() {
 
     private fun saveImageToFirebase(gate: Gate) {
 
-            val riversRef = storageRef.child("images/${urlImage!!.lastPathSegment}")
-            val uploadTask:UploadTask= riversRef.putFile(urlImage!!);
+            var riversRef:StorageReference = storageRef.child("images/${urlImage!!.lastPathSegment}")
+
+
+            val uploadTask:UploadTask= riversRef.putFile(urlImage!!)
+
 
             uploadTask.addOnFailureListener {
                 Toast.makeText(context, "Error: ${it.message}", Toast.LENGTH_LONG).show()
+                val errorCode = (it as StorageException).errorCode
+                val errorMessage = it.message
+                Log.d("Error", it.toString())
+                Log.d("Error code", errorCode.toString())
+                Log.d("Error Message", errorMessage.toString())
             }.addOnSuccessListener {
                 riversRef.downloadUrl.addOnSuccessListener {
                     lifecycleScope.launch(Dispatchers.Main) {
@@ -189,6 +205,7 @@ class AddGateFragment : Fragment() {
                     }
                 }.addOnFailureListener {
                     Toast.makeText(context, "Error: ${it.message}", Toast.LENGTH_LONG).show()
+
                 }
 
             }
@@ -255,6 +272,7 @@ class AddGateFragment : Fragment() {
     private fun pickPhoto(dialog: Dialog) {
         val btnGoModalSelectImage:ImageButton = dialog.findViewById(R.id.btnGoModalSelectImage)
         btnGoModalSelectImage.setOnClickListener {
+            cambiarImagen = true
             pickMedia.launch(PickVisualMediaRequest(PickVisualMedia.ImageOnly))
         }
     }

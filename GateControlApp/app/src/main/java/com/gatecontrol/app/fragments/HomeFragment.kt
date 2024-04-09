@@ -98,6 +98,7 @@ class HomeFragment : Fragment() {
                     wifiName = "",
                     voltage = 0
                 )
+                Log.d("URL_IMAGE", doc["urlImage"].toString())
                 gate.gateId = doc.id
                 gates.add(i, gate)
                 i+=1
